@@ -6,16 +6,12 @@ import requests
 import json
 import datetime
 
-DATABASE = "airflow"
+DATABASE = "airflow" 
 USER = "airflow"
 PASSWORD = "airflow"
 HOST = "postgres"
 PORT = "5432"
-spotify_client_id = "686bad6a4e78405c91909991f8e06f8a"
-spotify_client_secret = "a433729a6d8d4bbebeffb25380e7844e"
-scope = 'user-read-recently-played'
-TOKEN = 'BQCdoM7i8yRrq68muWD9TCcR_1pEoRLhMGjdOsS54zrzrl8wdpoVy4LTYT32RZnmuu-1WeKLUmePrK3SEld3W5GUNWQ8QFREWfywHSPJSWW6D1aSzqoVKlyxcHvdeVtIOqulZ4Nx1lfQJrcoaWsdW_JefAp1GZPoar1_WpP7jRiVylxLnyaIjkKm6pOXRJqNqm1xsmducLVB3hfynIavu8XYpZ_GrE_CEKccYZNXfzY2RVBeSjQNyOT4D33NBMnAyhG2qbfOyqIaU0OIujQx8wCjavAGbISuBFVwMnV8pM51'
-
+TOKEN = '' #place your token here 
 engine = create_engine('postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}'.format(user=USER,password=PASSWORD,host=HOST,port=PORT,database=DATABASE))
 
 def spotify_etl_run():
@@ -85,12 +81,6 @@ def spotify_etl_run():
     song_df = pd.DataFrame.from_dict(song_list)
     song_df['unique_identifier'] = song_df['song_id'] + "-" + song_df['date_time_played'].astype(str)
     song_df = song_df[['unique_identifier','song_id','song_name','duration_ms','url','popularity','date_time_played','album_id','artist_id']]
-
-
-    print(song_df)
-    print(album_df)
-    print(artist_df)
-
 
     song_df.to_sql("songs", engine, index=False,if_exists='replace')
     album_df.to_sql("album", engine, index=False,if_exists='replace')
